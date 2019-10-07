@@ -77,9 +77,13 @@ ENV MQTT_BROKER_PORT=1883
 ENV MQTT_BROKER_SSL_PORT=8883
 ENV MQTT_BROKER_WEBSOCKETS_PORT=8884
 
-ENV MQTT_BROKER_CAFILE=/etc/mosquitto/persist/certificates/ca.crt
-ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/persist/certificates/srv.crt
-ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/persist/certificates/srv.key
+ENV MQTT_BROKER_CAFILE=/etc/mosquitto/certificates/ca.crt
+ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/certificates/srv.crt
+ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/certificates/srv.key
+
+# create default certificates
+RUN mkdir -p /etc/mosquitto/certificates
+COPY --chown=mosquitto:mosquitto etc/mosquitto/certificates /etc/mosquitto/certificates
 
 # create passwd
 RUN mkdir -p /etc/mosquitto/persist
