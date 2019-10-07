@@ -10,7 +10,7 @@ RUN apt-get install -y apt-utils git
 RUN apt-get install -y make gcc g++
 
 # Install opensll, curl
-RUN apt-get install -y openssl libcurl4-openssl-dev
+RUN apt-get install -y curl openssl libcurl4-openssl-dev
 
 # Install libwebsockets
 RUN apt-get install -y libwebsockets-dev
