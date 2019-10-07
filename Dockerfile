@@ -62,10 +62,10 @@ WORKDIR /src/mosquitto-auth-plug
 WORKDIR /src/mosquitto-auth-plug
 RUN sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
         -e 's/BACKEND_FILES ?= no/BACKEND_FILES ?= yes/' \
-	-e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
-	-e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/src/mosquitto,' \
-	-e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
-	config.mk.in > config.mk
+        -e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
+        -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/src/mosquitto,' \
+        -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
+        config.mk.in > config.mk
 RUN make; cp auth-plug.so /usr/local/lib
 
 # configure broker
@@ -86,11 +86,17 @@ ENV MQTT_BROKER_CAFILE=/etc/mosquitto/persist/certificates/ca.crt
 ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/persist/certificates/srv.crt
 ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/persist/certificates/srv.key
 
+# create passwd
+RUN touch /etc/mosquitto/persist/passwd
+
 # entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
 
 # Entrypoint script
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Add VOLUME to allow access to certificates, logs, and passwd
+VOLUME ["/etc/mosquito/persist"]
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["all"]
