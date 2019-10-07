@@ -2,14 +2,15 @@
 FROM ubuntu:18.04
 
 # Getting rid of debconf messages
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN apt-get update -y
 RUN apt-get install -y apt-utils git
+RUN apt-get install -y make gcc g++
 
-# Install opensll
-RUN apt-get install -y openssl
+# Install opensll, curl
+RUN apt-get install -y openssl libcurl4-openssl-dev
 
 # Install libwebsockets
 RUN apt-get install -y libwebsockets-dev
@@ -35,8 +36,7 @@ RUN useradd -M mosquitto
 RUN usermod -L mosquitto
 
 # /etc/mosquitto
-COPY etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf
-COPY etc/mosquitto/conf.d /etc/mosquitto/conf.d
+COPY etc/mosquitto /etc/mosquitto
 
 # daemon
 COPY init.d/mosquitto /etc/init.d/mosquitto
@@ -69,26 +69,22 @@ RUN sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
 RUN make; cp auth-plug.so /usr/local/lib
 
 # configure broker
-ARG MQTT_BROKER_HTTP_IP=127.0.0.1
-ARG MQTT_BROKER_HTTP_PORT=8000
-ARG MQTT_BROKER_HTTP_WITH_TLS=false
-ARG MQTT_BROKER_HTTP_HOSTNAME=localhost
+ENV HTTP_BACKEND_IP=127.0.0.1
+ENV HTTP_BACKEND_PORT=8000
+ENV HTTP_BACKEND_WITH_TLS=false
+ENV HTTP_BACKEND_HOSTNAME=localhost
+ENV HTTP_BACKEND_GETUSER_URI=/en/auth/mqtt/login/
+ENV HTTP_BACKEND_SUPERUSER_URI=/en/auth/mqtt/superuser/
+ENV HTTP_BACKEND_ACLCHECK_URI=/en/auth/mqtt/acl/
 
-ARG MQTT_USERNAME=admin
-ARG MQTT_BROKER_PORT=1883
-ARG MQTT_BROKER_SSL_PORT=8883
-ARG MQTT_BROKER_WEBSOCKETS_PORT=8884
+ENV MQTT_SUPERUSER=admin
+ENV MQTT_BROKER_PORT=1883
+ENV MQTT_BROKER_SSL_PORT=8883
+ENV MQTT_BROKER_WEBSOCKETS_PORT=8884
 
-RUN sed -i'' \
-    -e 's/\[ip\]/'"$MQTT_BROKER_HTTP_IP"'/g' \
-    -e 's/\[port\]/'"$MQTT_BROKER_HTTP_PORT"'/g' \
-    -e 's/\[with_tls\]/'"$MQTT_BROKER_HTTP_WITH_TLS"'/g' \
-    -e 's/\[hostname\]/'"$MQTT_BROKER_HTTP_HOSTNAME"'/g' \
-    -e 's/\[mqtt-username\]/'"$MQTT_USERNAME"'/g' \
-    -e 's/\[mqtt-broker-port\]/'"$MQTT_BROKER_PORT"'/g' \
-    -e 's/\[mqtt-broker-ssl-port\]/'"$MQTT_BROKER_SSL_PORT"'/g' \
-    -e 's/\[mqtt-broker-websockets-port\]/'"$MQTT_BROKER_WEBSOCKETS_PORT"'/g' \
-    /etc/mosquitto/conf.d/default.conf
+ENV MQTT_BROKER_CAFILE=/etc/mosquitto/persist/certificates/ca.crt
+ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/persist/certificates/srv.crt
+ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/persist/certificates/srv.key
 
 # entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
