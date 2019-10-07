@@ -28,16 +28,14 @@ COMMAND=$1
 # Run commands
 if [ "$COMMAND" = 'all' ]; then
 
-    echo "> Starting container"
+    echo "> Starting container..."
 
     # Trap SIGTERM
     trap 'kill ${!}; cleanup' SIGTERM
 
     if [ "$COMMAND" = 'all' ]; then
 
-    echo "$(sedPath $HTTP_BACKEND_GETUSER_URI)"
-
-	echo "> Configuring MQTT service"
+	echo "> Configuring MQTT service..."
 	sed -i'' \
         -e 's/\[http-backend-ip\]/'"$HTTP_BACKEND_IP"'/g' \
         -e 's/\[http-backend-port\]/'"$HTTP_BACKEND_PORT"'/g' \
@@ -55,7 +53,7 @@ if [ "$COMMAND" = 'all' ]; then
         -e 's/\[mqtt-broker-keyfile\]/'"$(sedPath $MQTT_BROKER_KEYFILE)"'/g' \
         /etc/mosquitto/conf.d/default.conf
 
-	echo "> Starting MQTT service"
+	echo "> Starting MQTT service..."
 	service mosquitto start
 
 	echo "> All services up"

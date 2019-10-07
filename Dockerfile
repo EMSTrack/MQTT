@@ -43,14 +43,6 @@ COPY init.d/mosquitto /etc/init.d/mosquitto
 RUN chmod +x /etc/init.d/mosquitto
 RUN update-rc.d mosquitto defaults
 
-# /var/log/mosquitto
-RUN mkdir /var/log/mosquitto
-RUN chown mosquitto:mosquitto /var/log/mosquitto
-
-# /var/lib/mosquitto
-RUN mkdir /var/lib/mosquitto
-RUN chown mosquitto:mosquitto /var/lib/mosquitto
-
 # Download source code for mosquitto-auth-plug
 WORKDIR /src
 #RUN git clone https://github.com/jpmens/mosquitto-auth-plug
@@ -67,6 +59,9 @@ RUN sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
         -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
         config.mk.in > config.mk
 RUN make; cp auth-plug.so /usr/local/lib
+
+# Run ldconfig
+RUN ldconfig
 
 # configure broker
 ENV HTTP_BACKEND_IP=127.0.0.1
@@ -87,7 +82,12 @@ ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/persist/certificates/srv.crt
 ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/persist/certificates/srv.key
 
 # create passwd
-RUN touch /etc/mosquitto/persist/passwd
+RUN mkdir -p /etc/mosquitto/persist
+WORKDIR /etc/mosquitto/persist
+RUN touch passwd
+
+# make persist writable
+RUN chown -R mosquitto:mosquitto /etc/mosquitto/persist
 
 # entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
@@ -96,7 +96,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Add VOLUME to allow access to certificates, logs, and passwd
-VOLUME ["/etc/mosquito/persist"]
+VOLUME ["/etc/mosquitto/persist"]
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["all"]
