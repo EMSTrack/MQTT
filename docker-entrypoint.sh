@@ -56,6 +56,8 @@ if [ "$COMMAND" = 'all' ]; then
 	echo "> Starting MQTT service..."
 	service mosquitto start
 
+	service mosquitto status
+
 	echo "> All services up"
 
     fi
