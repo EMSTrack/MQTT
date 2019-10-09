@@ -13,7 +13,19 @@ RUN apt-get install -y make gcc g++
 RUN apt-get install -y curl openssl libcurl4-openssl-dev
 
 # Install libwebsockets
-RUN apt-get install -y libwebsockets-dev uuid-dev
+# RUN apt-get install -y libwebsockets-dev uuid-dev
+
+# Download source code for libwebsockets
+# THIS MIGHT NOT BE NECESSARY IN THE FUTURE!
+# CURRENT VERSION OF LIBWEBSOCKET GENERATES
+# ERROR IN MOSQUITTO-AUTH-PLUG
+WORKDIR /src
+RUN git clone https://github.com/warmcat/libwebsockets
+
+# Build libwebsockets
+WORKDIR /src/libwebsockets/build
+RUN cmake ..
+RUN make install
 
 # Download source code for mosquitto
 WORKDIR /src
