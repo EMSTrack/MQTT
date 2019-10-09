@@ -19,7 +19,7 @@ RUN apt-get install -y curl openssl libcurl4-openssl-dev
 # THIS MIGHT NOT BE NECESSARY IN THE FUTURE!
 # CURRENT VERSION OF LIBWEBSOCKET GENERATES
 # ERROR IN MOSQUITTO-AUTH-PLUG
-RUN apt-get install -y cmake openssl-dev
+RUN apt-get install -y cmake libssl-dev
 WORKDIR /src
 RUN git clone https://github.com/warmcat/libwebsockets
 
