@@ -20,7 +20,7 @@ WORKDIR /src
 RUN git clone https://github.com/eclipse/mosquitto
 WORKDIR /src/mosquitto
 # RUN git checkout 8025f5a29b78551e1d5e9ea13ae9dacabb6830da
-RUN git checkout ae309b331cf79663d6a0f2df9a976c6511c552fa
+#RUN git checkout ae309b331cf79663d6a0f2df9a976c6511c552fa
 
 # Configure and build mosquitto
 WORKDIR /src/mosquitto
