@@ -13,7 +13,7 @@ RUN apt-get install -y make gcc g++
 RUN apt-get install -y curl openssl libcurl4-openssl-dev
 
 # Install libwebsockets
-RUN apt-get install -y libwebsockets-dev
+RUN apt-get install -y libwebsockets-dev uuid-dev
 
 # Download source code for mosquitto
 WORKDIR /src
