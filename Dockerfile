@@ -81,6 +81,8 @@ ENV MQTT_BROKER_CAFILE=/etc/mosquitto/certificates/ca.crt
 ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/certificates/srv.crt
 ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/certificates/srv.key
 
+ENV PASS_FILE=/etc/mosquitto/persist/passwd
+
 # create default certificates
 RUN mkdir -p /etc/mosquitto/certificates
 COPY --chown=mosquitto:mosquitto etc/mosquitto/certificates /etc/mosquitto/certificates

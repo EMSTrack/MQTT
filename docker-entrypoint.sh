@@ -51,11 +51,18 @@ if [ "$COMMAND" = 'all' ]; then
         -e 's/\[mqtt-broker-cafile\]/'"$(sedPath $MQTT_BROKER_CAFILE)"'/g' \
         -e 's/\[mqtt-broker-certfile\]/'"$(sedPath $MQTT_BROKER_CERTFILE)"'/g' \
         -e 's/\[mqtt-broker-keyfile\]/'"$(sedPath $MQTT_BROKER_KEYFILE)"'/g' \
+        -e 's/\[pass-file\]/'"$(sedPath $PASS_FILE)"'/g' \
         /etc/mosquitto/conf.d/default.conf
+
+  # Wait for postgres
+  timer="5"
+  until [ -f $PASS_FILE ]; do
+      >&2 echo "Could not open password file - sleeping for $timer seconds"
+      sleep $timer
+  done
 
 	echo "> Starting MQTT service..."
 	service mosquitto start
-
 	service mosquitto status
 
 	echo "> All services up"
