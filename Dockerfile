@@ -25,7 +25,7 @@ RUN git clone https://github.com/warmcat/libwebsockets
 
 # Build libwebsockets
 WORKDIR /src/libwebsockets/build
-RUN cmake ..
+RUN cmake -DLWS_DEF_HEADER_LEN=4096 -DCMAKE_BUILD_TYPE=DEBUG ..
 RUN make install
 
 # Download source code for mosquitto
