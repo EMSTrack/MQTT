@@ -106,7 +106,8 @@ RUN sed -i'' \
     -e 's/RANDFILE/#RANDFILE/' \
     /etc/ssl/openssl.cnf
 # https://mosquitto.org/man/mosquitto-tls-7.html
-RUN openssl genrsa -des3 -passout pass:cruzroja -out server.key 2048
+# RUN openssl genrsa -des3 -passout pass:cruzroja -out server.key 2048
+RUN openssl genrsa -passout pass:cruzroja -out server.key 2048
 RUN openssl req -out server.csr -key server.key -passin pass:cruzroja -new \
     -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack/OU=MQTT/CN=ssl.emstrack.org"
 # https://asciinema.org/a/201826
