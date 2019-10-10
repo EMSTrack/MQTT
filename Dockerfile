@@ -71,6 +71,19 @@ RUN set -x && \
         WITH_WEBSOCKETS=yes \
         prefix=/usr \
         binary && \
+    cd /build && \
+    wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
+    mkdir -p /build/map && \
+    tar --strip=1 -xf /tmp/map.tar.gz -C /build/map && \
+    rm /tmp/map.tar.gz && \
+    cd /build/map && \
+    sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
+        -e 's/BACKEND_FILES ?= no/BACKEND_FILES ?= yes/' \
+        -e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
+        -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/build/mosq,' \
+        -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
+        config.mk.in > config.mk && \
+    make; cp auth-plug.so /usr/local/lib && \
     addgroup -S -g 1883 mosquitto 2>/dev/null && \
     adduser -S -u 1883 -D -H -h /var/empty -s /sbin/nologin -G mosquitto -g mosquitto mosquitto 2>/dev/null && \
     mkdir -p /mosquitto/config /mosquitto/data /mosquitto/log && \
@@ -83,22 +96,6 @@ RUN set -x && \
     install -s -m755 /build/mosq/src/mosquitto_passwd /usr/bin/mosquitto_passwd && \
     install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
     chown -R mosquitto:mosquitto /mosquitto && \
-    ls /usr/lib && \
-    ls /build/mosq/lib && \
-    cd /build && \
-    wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
-    mkdir -p /build/map && \
-    tar --strip=1 -xf /tmp/map.tar.gz -C /build/map && \
-    rm /tmp/map.tar.gz && \
-    cd /build/map && \
-    sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
-        -e 's/BACKEND_FILES ?= no/BACKEND_FILES ?= yes/' \
-        -e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
-        -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/build/mosq,' \
-        -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
-        -e 's,CFG_LDFLAGS =,CFG_LDFLAGS = -L/usr/lib,' \
-        config.mk.in > config.mk && \
-    make; cp auth-plug.so /usr/local/lib && \
     apk del build-deps && \
     rm -rf /build
 
