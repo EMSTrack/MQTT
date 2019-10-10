@@ -15,11 +15,10 @@ RUN set -x && \
         gnupg \
         libressl-dev \
         util-linux-dev \
-        git \
         make \
         gcc \
         libc-dev \
-        libcurl && \
+        libcurl-dev && \
     wget https://github.com/warmcat/libwebsockets/archive/v${LWS_VERSION}.tar.gz -O /tmp/lws.tar.gz && \
     mkdir -p /build/lws && \
     tar --strip=1 -xf /tmp/lws.tar.gz -C /build/lws && \
@@ -84,8 +83,11 @@ RUN set -x && \
     install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
     chown -R mosquitto:mosquitto /mosquitto && \
     cd /build && \
-    git clone https://github.com/EMSTrack/mosquitto-auth-plug && \
-    cd /build/mosquitto-auth-plug && \
+    wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
+    mkdir -p /build/map && \
+    tar --strip=1 -xf /tmp/map.tar.gz -C /build/map && \
+    rm /tmp/map.tar.gz && \
+    cd /build/map && \
     sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
         -e 's/BACKEND_FILES ?= no/BACKEND_FILES ?= yes/' \
         -e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
