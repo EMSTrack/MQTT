@@ -1,5 +1,49 @@
 # Using ubuntu as a base image
-FROM eclipse-mosquitto:1.6
+FROM ubuntu:18.04
+
+# Getting rid of debconf messages
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update -y
+RUN apt-get install -y apt-utils git
+RUN apt-get install -y make gcc g++
+
+# Install opensll, curl
+RUN apt-get install -y curl openssl libcurl4-openssl-dev
+
+# Install libwebsockets
+RUN apt-get install -y libwebsockets-dev
+
+## Download source code for libwebsockets
+## THIS MIGHT NOT BE NECESSARY IN THE FUTURE!
+## CURRENT VERSION OF LIBWEBSOCKET GENERATES
+## ERROR IN MOSQUITTO-AUTH-PLUG
+#RUN apt-get install -y cmake libssl-dev
+#WORKDIR /src
+#RUN git clone https://github.com/warmcat/libwebsockets
+
+## Build libwebsockets
+#WORKDIR /src/libwebsockets/build
+#RUN cmake -DLWS_DEF_HEADER_LEN=4096 -DCMAKE_BUILD_TYPE=DEBUG ..
+#RUN make install
+
+# Download source code for mosquitto
+WORKDIR /src
+RUN git clone https://github.com/eclipse/mosquitto
+WORKDIR /src/mosquitto
+# RUN git checkout 8025f5a29b78551e1d5e9ea13ae9dacabb6830da
+#RUN git checkout ae309b331cf79663d6a0f2df9a976c6511c552fa
+
+# Configure and build mosquitto
+WORKDIR /src/mosquitto
+RUN cp config.mk config.mk.in
+RUN sed -e 's/WITH_SRV:=yes/WITH_SRV:=no/' \
+        -e 's/WITH_WEBSOCKETS:=no/WITH_WEBSOCKETS:=yes/' \
+	-e 's/WITH_DOCS:=yes/WITH_DOCS:=no/' \
+	config.mk.in > config.mk
+
+RUN make binary install
 
 # Download source code for mosquitto-auth-plug
 WORKDIR /src
@@ -40,6 +84,10 @@ ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/persist/certificates/server.crt
 ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/persist/certificates/server.key
 
 ENV PASS_FILE=/etc/mosquitto/persist/passwd
+
+# add mosquitto user
+RUN useradd -M mosquitto
+RUN usermod -L mosquitto
 
 # /etc/mosquitto
 COPY etc/mosquitto /etc/mosquitto
