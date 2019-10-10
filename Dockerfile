@@ -79,9 +79,9 @@ ENV MQTT_BROKER_PORT=1883
 ENV MQTT_BROKER_SSL_PORT=8883
 ENV MQTT_BROKER_WEBSOCKETS_PORT=8884
 
-ENV MQTT_BROKER_CAFILE=/etc/mosquitto/certificates/my-ca.crt
-ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/certificates/server.crt
-ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/certificates/server.key
+ENV MQTT_BROKER_CAFILE=/etc/mosquitto/persist/certificates/my-ca.crt
+ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/persist/certificates/server.crt
+ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/persist/certificates/server.key
 
 ENV PASS_FILE=/etc/mosquitto/persist/passwd
 
@@ -98,9 +98,9 @@ RUN chmod +x /etc/init.d/mosquitto
 RUN update-rc.d mosquitto defaults
 
 # generate certificates
-RUN mkdir -p /etc/mosquitto/certificates
+RUN mkdir -p /etc/mosquitto/persist/certificates
 # COPY --chown=mosquitto:mosquitto etc/mosquitto/certificates /etc/mosquitto/certificates
-WORKDIR /etc/mosquitto/certificates
+WORKDIR /etc/mosquitto/persist/certificates
 # https://github.com/openssl/openssl/issues/7754#issuecomment-444063355
 RUN sed -i'' \
     -e 's/RANDFILE/#RANDFILE/' \
@@ -116,13 +116,11 @@ RUN openssl req -new -x509 -days 365 -extensions v3_ca -keyout my-ca.key -out my
 RUN openssl x509 -req -in server.csr -CA my-ca.crt -CAkey my-ca.key -CAcreateserial \
     -passin pass:cruzroja -out server.crt -days 180
 
-# create passwd
-RUN mkdir -p /etc/mosquitto/persist
-WORKDIR /etc/mosquitto/persist
-RUN touch passwd
-
 # make persist writable
 RUN chown -R mosquitto:mosquitto /etc/mosquitto/persist
+
+# make persist the current directory
+WORKDIR /etc/mosquitto/persist
 
 # entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
