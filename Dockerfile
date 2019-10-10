@@ -40,7 +40,7 @@ RUN set -x && \
     rm /tmp/mosq.tar.gz
 
 RUN set -x && \
-    cp /usr/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so
+    cp /usr/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
