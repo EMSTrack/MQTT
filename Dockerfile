@@ -7,6 +7,7 @@ FROM eclipse-mosquitto:1.6.7
 
 # setup environment and copy current source version of mosquitto
 RUN set -x && \
+    apk --no-cache curl-dev && \
     apk --no-cache add --virtual build-deps \
         build-base \
         cmake \
@@ -15,8 +16,7 @@ RUN set -x && \
         util-linux-dev \
         make \
         gcc \
-        libc-dev \
-        curl-dev && \
+        libc-dev && \
     wget https://mosquitto.org/files/source/mosquitto-${VERSION}.tar.gz -O /tmp/mosq.tar.gz && \
     echo "$DOWNLOAD_SHA256  /tmp/mosq.tar.gz" | sha256sum -c - && \
     wget https://mosquitto.org/files/source/mosquitto-${VERSION}.tar.gz.asc -O /tmp/mosq.tar.gz.asc && \
