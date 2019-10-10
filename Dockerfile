@@ -72,7 +72,7 @@ RUN set -x && \
         prefix=/usr \
         binary && \
     cp /build/mosq/lib/libmosquitto.so.1 /build/mosq/lib/libmosquitto.so && \
-    mkdir -p /mosquitto/config /mosquitto/data /mosquitto/log && \
+    mkdir -p /etc/mosquitto /etc/mosquitto/data /etc/mosquitto/log && \
     install -d /usr/sbin/ && \
     install -s -m755 /build/mosq/client/mosquitto_pub /usr/bin/mosquitto_pub && \
     install -s -m755 /build/mosq/client/mosquitto_rr /usr/bin/mosquitto_rr && \
@@ -80,7 +80,7 @@ RUN set -x && \
     install -s -m644 /build/mosq/lib/libmosquitto.so /usr/lib/libmosquitto.so && \
     install -s -m755 /build/mosq/src/mosquitto /usr/sbin/mosquitto && \
     install -s -m755 /build/mosq/src/mosquitto_passwd /usr/bin/mosquitto_passwd && \
-    install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
+    install -m644 /build/mosq/mosquitto.conf /etc/mosquitto/config/mosquitto.conf && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
@@ -96,7 +96,7 @@ RUN set -x && \
     make; cp auth-plug.so /usr/local/lib && \
     addgroup -S -g 1883 mosquitto 2>/dev/null && \
     adduser -S -u 1883 -D -H -h /var/empty -s /sbin/nologin -G mosquitto -g mosquitto mosquitto 2>/dev/null && \
-    chown -R mosquitto:mosquitto /mosquitto && \
+    chown -R mosquitto:mosquitto /etc/mosquitto && \
     apk del build-deps && \
     rm -rf /build
 
@@ -142,7 +142,10 @@ RUN openssl genrsa -passout pass:cruzroja -out server.key 2048
 RUN openssl req -out server.csr -key server.key -passin pass:cruzroja -new \
     -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack Certification/OU=Certification/CN=localhost"
 # https://asciinema.org/a/201826
-RUN openssl req -new -x509 -days 365 -extensions v3_ca -keyout my-ca.key -out my-ca.crt \
+#RUN openssl req -new -x509 -days 365 -extensions v3_ca -keyout my-ca.key -out my-ca.crt \
+#    -passout pass:cruzroja -passin pass:cruzroja \
+#    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack MQTT/OU=MQTT/CN=localhost"
+RUN openssl req -new -x509 -days 365 -keyout my-ca.key -out my-ca.crt \
     -passout pass:cruzroja -passin pass:cruzroja \
     -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack MQTT/OU=MQTT/CN=localhost"
 RUN openssl x509 -req -in server.csr -CA my-ca.crt -CAkey my-ca.key -CAcreateserial \
