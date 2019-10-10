@@ -70,8 +70,15 @@ RUN set -x && \
         WITH_WEBSOCKETS=yes \
         prefix=/usr \
         binary && \
-    ls /build/mosq/lib && \
     cp /build/mosq/lib/libmosquitto.so.1 /build/mosq/lib/libmosquitto.so && \
+    install -d /usr/sbin/ && \
+    install -s -m755 /build/mosq/client/mosquitto_pub /usr/bin/mosquitto_pub && \
+    install -s -m755 /build/mosq/client/mosquitto_rr /usr/bin/mosquitto_rr && \
+    install -s -m755 /build/mosq/client/mosquitto_sub /usr/bin/mosquitto_sub && \
+    install -s -m644 /build/mosq/lib/libmosquitto.so /usr/lib/libmosquitto.so && \
+    install -s -m755 /build/mosq/src/mosquitto /usr/sbin/mosquitto && \
+    install -s -m755 /build/mosq/src/mosquitto_passwd /usr/bin/mosquitto_passwd && \
+    install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
@@ -88,14 +95,6 @@ RUN set -x && \
     addgroup -S -g 1883 mosquitto 2>/dev/null && \
     adduser -S -u 1883 -D -H -h /var/empty -s /sbin/nologin -G mosquitto -g mosquitto mosquitto 2>/dev/null && \
     mkdir -p /mosquitto/config /mosquitto/data /mosquitto/log && \
-    install -d /usr/sbin/ && \
-    install -s -m755 /build/mosq/client/mosquitto_pub /usr/bin/mosquitto_pub && \
-    install -s -m755 /build/mosq/client/mosquitto_rr /usr/bin/mosquitto_rr && \
-    install -s -m755 /build/mosq/client/mosquitto_sub /usr/bin/mosquitto_sub && \
-    install -s -m644 /build/mosq/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so.1 && \
-    install -s -m755 /build/mosq/src/mosquitto /usr/sbin/mosquitto && \
-    install -s -m755 /build/mosq/src/mosquitto_passwd /usr/bin/mosquitto_passwd && \
-    install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
     chown -R mosquitto:mosquitto /mosquitto && \
     apk del build-deps && \
     rm -rf /build
