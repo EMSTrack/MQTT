@@ -17,7 +17,7 @@ WORKDIR /src/mosquitto-auth-plug
 RUN sed -e 's/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/' \
         -e 's/BACKEND_FILES ?= no/BACKEND_FILES ?= yes/' \
         -e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
-        -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/src/mosquitto,' \
+        -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/build/mosq,' \
         -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
         config.mk.in > config.mk
 RUN make; cp auth-plug.so /usr/local/lib
