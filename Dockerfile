@@ -64,7 +64,7 @@ RUN set -x && \
         LDFLAGS="-L/build/lws/lib" \
         WITH_ADNS=no \
         WITH_DOCS=no \
-        WITH_SHARED_LIBRARIES=yes \
+        WITH_SHARED_LIBRARIES=no \
         WITH_SRV=no \
         WITH_STRIP=yes \
         WITH_TLS_PSK=no \
