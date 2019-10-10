@@ -1,4 +1,17 @@
 #!/bin/ash
-set -e
 
-exec "$@"
+sigint_handler()
+{
+  kill $(jobs -p)
+  exit
+}
+
+trap sigint_handler SIGINT
+
+set -e
+while true; do
+  $@ &
+  PID=$!
+  inotifywait -e modify -e move -e create -e delete -e attrib -r /mosquitto/config/reload
+  kill $PID
+done
