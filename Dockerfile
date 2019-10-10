@@ -109,11 +109,11 @@ RUN sed -i'' \
 # RUN openssl genrsa -des3 -passout pass:cruzroja -out server.key 2048
 RUN openssl genrsa -passout pass:cruzroja -out server.key 2048
 RUN openssl req -out server.csr -key server.key -passin pass:cruzroja -new \
-    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack/OU=Certification/CN=localhost"
+    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack Certification/OU=Certification/CN=127.0.0.1"
 # https://asciinema.org/a/201826
 RUN openssl req -new -x509 -days 365 -extensions v3_ca -keyout my-ca.key -out my-ca.crt \
     -passout pass:cruzroja -passin pass:cruzroja \
-    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack/OU=MQTT/CN=localhost"
+    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack MQTT/OU=MQTT/CN=127.0.0.1"
 RUN openssl x509 -req -in server.csr -CA my-ca.crt -CAkey my-ca.key -CAcreateserial \
     -passin pass:cruzroja -out server.crt -days 180
 
