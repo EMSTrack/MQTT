@@ -1,4 +1,4 @@
-FROM eclipse-mqtt:1.6.7
+FROM eclipse-mosquitto:1.6.7
 
 #ENV VERSION=1.6.7 \
 #    DOWNLOAD_SHA256=bcd31a8fbbd053fee328986fadd8666d3058357ded56b9782f7d4f19931d178e \
