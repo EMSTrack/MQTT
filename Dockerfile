@@ -9,6 +9,7 @@ ENV VERSION=1.6.7 \
     LWS_VERSION=2.4.2
 
 RUN set -x && \
+    apk --no-cache add openrc \
     apk --no-cache add --virtual build-deps \
         build-base \
         cmake \
