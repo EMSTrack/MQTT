@@ -82,7 +82,6 @@ RUN set -x && \
     install -s -m755 /build/mosq/src/mosquitto_passwd /usr/bin/mosquitto_passwd && \
     install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
     chown -R mosquitto:mosquitto /mosquitto && \
-    ldconfig && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
@@ -94,6 +93,7 @@ RUN set -x && \
         -e 's/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/' \
         -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/build/mosq,' \
         -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
+        -e 's,CFG_LDFLAGS =,CFG_LDFLAGS = -L/usr/lib,' \
         config.mk.in > config.mk && \
     make; cp auth-plug.so /usr/local/lib && \
     ldconfig && \
