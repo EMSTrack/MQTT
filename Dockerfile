@@ -1,6 +1,10 @@
 # Using ubuntu as a base image
 FROM eclipse-mosquitto:1.6
 
+# make available run pip install psycopg2
+RUN apk update && \
+    apk add git
+
 # Download source code for mosquitto-auth-plug
 WORKDIR /src
 #RUN git clone https://github.com/jpmens/mosquitto-auth-plug
