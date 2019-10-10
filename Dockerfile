@@ -126,8 +126,7 @@ COPY etc/mosquitto /etc/mosquitto
 # daemon
 COPY init.d/mosquitto /etc/init.d/mosquitto
 RUN chmod +x /etc/init.d/mosquitto
-RUN openrc
-RUN rc-update add mosquitto 3
+RUN rc-update add mosquitto
 
 # generate certificates
 RUN mkdir -p /etc/mosquitto/persist/certificates
