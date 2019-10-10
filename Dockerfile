@@ -82,6 +82,7 @@ RUN set -x && \
     install -s -m755 /build/mosq/src/mosquitto_passwd /usr/bin/mosquitto_passwd && \
     install -m644 /build/mosq/mosquitto.conf /mosquitto/config/mosquitto.conf && \
     chown -R mosquitto:mosquitto /mosquitto && \
+    ldconfig && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
