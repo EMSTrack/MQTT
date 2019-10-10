@@ -45,18 +45,6 @@ RUN sed -e 's/WITH_SRV:=yes/WITH_SRV:=no/' \
 
 RUN make binary install
 
-# add mosquitto user
-RUN useradd -M mosquitto
-RUN usermod -L mosquitto
-
-# /etc/mosquitto
-COPY etc/mosquitto /etc/mosquitto
-
-# daemon
-COPY init.d/mosquitto /etc/init.d/mosquitto
-RUN chmod +x /etc/init.d/mosquitto
-RUN update-rc.d mosquitto defaults
-
 # Download source code for mosquitto-auth-plug
 WORKDIR /src
 #RUN git clone https://github.com/jpmens/mosquitto-auth-plug
@@ -96,6 +84,18 @@ ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/certificates/server.crt
 ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/certificates/server.key
 
 ENV PASS_FILE=/etc/mosquitto/persist/passwd
+
+# add mosquitto user
+RUN useradd -M mosquitto
+RUN usermod -L mosquitto
+
+# /etc/mosquitto
+COPY etc/mosquitto /etc/mosquitto
+
+# daemon
+COPY init.d/mosquitto /etc/init.d/mosquitto
+RUN chmod +x /etc/init.d/mosquitto
+RUN update-rc.d mosquitto defaults
 
 # generate certificates
 RUN mkdir -p /etc/mosquitto/certificates
