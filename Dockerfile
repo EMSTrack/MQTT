@@ -18,8 +18,7 @@ RUN set -x && \
         make \
         gcc \
         libc-dev \
-        curl-dev \
-        musl-dev && \
+        curl-dev && \
     wget https://github.com/warmcat/libwebsockets/archive/v${LWS_VERSION}.tar.gz -O /tmp/lws.tar.gz && \
     mkdir -p /build/lws && \
     tar --strip=1 -xf /tmp/lws.tar.gz -C /build/lws && \
@@ -71,6 +70,7 @@ RUN set -x && \
         WITH_WEBSOCKETS=yes \
         prefix=/usr \
         binary && \
+    ls /build/mosq/lib && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
