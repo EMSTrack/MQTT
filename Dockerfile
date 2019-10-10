@@ -72,6 +72,7 @@ RUN set -x && \
         prefix=/usr \
         binary && \
     cp /build/mosq/lib/libmosquitto.so.1 /build/mosq/lib/libmosquitto.so && \
+    mkdir -p /mosquitto/config /mosquitto/data /mosquitto/log && \
     install -d /usr/sbin/ && \
     install -s -m755 /build/mosq/client/mosquitto_pub /usr/bin/mosquitto_pub && \
     install -s -m755 /build/mosq/client/mosquitto_rr /usr/bin/mosquitto_rr && \
@@ -95,7 +96,6 @@ RUN set -x && \
     make; cp auth-plug.so /usr/local/lib && \
     addgroup -S -g 1883 mosquitto 2>/dev/null && \
     adduser -S -u 1883 -D -H -h /var/empty -s /sbin/nologin -G mosquitto -g mosquitto mosquitto 2>/dev/null && \
-    mkdir -p /mosquitto/config /mosquitto/data /mosquitto/log && \
     chown -R mosquitto:mosquitto /mosquitto && \
     apk del build-deps && \
     rm -rf /build
