@@ -63,7 +63,7 @@ RUN set -x && \
         LDFLAGS="-L/build/lws/lib" \
         WITH_ADNS=no \
         WITH_DOCS=no \
-        WITH_SHARED_LIBRARIES=no \
+        WITH_SHARED_LIBRARIES=yes \
         WITH_SRV=no \
         WITH_STRIP=yes \
         WITH_TLS_PSK=no \
@@ -71,6 +71,7 @@ RUN set -x && \
         prefix=/usr \
         binary && \
     ls /build/mosq/lib && \
+    cp /build/mosq/lib/libmosquitto.so.1 /build/mosq/lib/libmosquitto.so && \
     cd /build && \
     wget https://github.com/EMSTrack/mosquitto-auth-plug/archive/master.tar.gz -O /tmp/map.tar.gz && \
     mkdir -p /build/map && \
