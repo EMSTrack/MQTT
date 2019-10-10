@@ -9,7 +9,7 @@ ENV VERSION=1.6.7 \
     LWS_VERSION=2.4.2
 
 RUN set -x && \
-    apk --no-cache add openrc \
+    apk --no-cache add openrc && \
     apk --no-cache add --virtual build-deps \
         build-base \
         cmake \
@@ -126,7 +126,7 @@ COPY etc/mosquitto /etc/mosquitto
 # daemon
 COPY init.d/mosquitto /etc/init.d/mosquitto
 RUN chmod +x /etc/init.d/mosquitto
-RUN update-rc.d mosquitto defaults
+RUN rc-update add mosquitto defaults
 
 # generate certificates
 RUN mkdir -p /etc/mosquitto/persist/certificates
