@@ -56,3 +56,9 @@ RUN set -x && \
     make; cp auth-plug.so /usr/lib && \
     apk del build-deps && \
     rm -rf /build
+
+# Set up the entry point script and default command
+COPY docker-entrypoint.sh /
+EXPOSE 1883
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["/usr/sbin/mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
