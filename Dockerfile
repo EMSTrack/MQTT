@@ -7,7 +7,7 @@ FROM eclipse-mosquitto:1.6.7
 
 # setup environment and copy current source version of mosquitto
 RUN set -x && \
-    apk --no-cache add curl-dev && \
+    apk --no-cache add curl-dev inotify-tools && \
     apk --no-cache add --virtual build-deps \
         build-base \
         cmake \
