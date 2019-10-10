@@ -3,7 +3,7 @@ FROM eclipse-mosquitto:1.6
 
 # make available run pip install psycopg2
 RUN apk update && \
-    apk add git make gcc libc-dev libssl-dev
+    apk add git make gcc libc-dev openssl-dev
 
 # Download source code for mosquitto-auth-plug
 WORKDIR /src
