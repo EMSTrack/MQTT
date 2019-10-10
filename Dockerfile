@@ -91,15 +91,30 @@ ENV MQTT_BROKER_PORT=1883
 ENV MQTT_BROKER_SSL_PORT=8883
 ENV MQTT_BROKER_WEBSOCKETS_PORT=8884
 
-ENV MQTT_BROKER_CAFILE=/etc/mosquitto/certificates/ca.crt
-ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/certificates/srv.crt
-ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/certificates/srv.key
+ENV MQTT_BROKER_CAFILE=/etc/mosquitto/certificates/my-ca.crt
+ENV MQTT_BROKER_CERTFILE=/etc/mosquitto/certificates/server.crt
+ENV MQTT_BROKER_KEYFILE=/etc/mosquitto/certificates/server.key
 
 ENV PASS_FILE=/etc/mosquitto/persist/passwd
 
-# create default certificates
+# generate certificates
 RUN mkdir -p /etc/mosquitto/certificates
-COPY --chown=mosquitto:mosquitto etc/mosquitto/certificates /etc/mosquitto/certificates
+# COPY --chown=mosquitto:mosquitto etc/mosquitto/certificates /etc/mosquitto/certificates
+WORKDIR /etc/mosquitto/certificates
+# https://github.com/openssl/openssl/issues/7754#issuecomment-444063355
+RUN sed -i'' \
+    -e 's/RANDFILE/#RANDFILE/' \
+    /etc/ssl/openssl.cnf
+# https://mosquitto.org/man/mosquitto-tls-7.html
+RUN openssl genrsa -des3 -passout pass:cruzroja -out server.key 2048
+RUN openssl req -out server.csr -key server.key -passin pass:cruzroja -new \
+    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack/OU=MQTT/CN=ssl.emstrack.org"
+# https://asciinema.org/a/201826
+RUN openssl req -new -x509 -days 365 -extensions v3_ca -keyout my-ca.key -out my-ca.crt \
+    -passout pass:cruzroja -passin pass:cruzroja \
+    -subj "/C=US/ST=CA/L=San Diego/O=EMSTrack/OU=MQTT/CN=ssl.emstrack.org"
+RUN openssl x509 -req -in server.csr -CA my-ca.crt -CAkey my-ca.key -CAcreateserial \
+    -passin pass:cruzroja -out server.crt -days 180
 
 # create passwd
 RUN mkdir -p /etc/mosquitto/persist
