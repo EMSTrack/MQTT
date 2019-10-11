@@ -9,6 +9,7 @@ sigint_handler()
 trap sigint_handler SIGINT
 
 set -e
+touch /mosquitto/config/reload
 while true; do
   $@ &
   PID=$!

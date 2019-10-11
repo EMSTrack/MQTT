@@ -58,9 +58,6 @@ RUN set -x && \
     rm -rf /build
 
 # Set up the entry point script and default command
-RUN touch /mosquitto/config/reload
-RUN chown mosquitto:mosquitto /mosquitto/config/reload
-
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 EXPOSE 1883
