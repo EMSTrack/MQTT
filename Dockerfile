@@ -1,10 +1,5 @@
 FROM eclipse-mosquitto:1.6.7
 
-#ENV VERSION=1.6.7 \
-#    DOWNLOAD_SHA256=bcd31a8fbbd053fee328986fadd8666d3058357ded56b9782f7d4f19931d178e \
-#    GPG_KEYS=A0D6EEA1DCAE49A635A3B2F0779B22DFB3E717B7 \
-#    LWS_VERSION=2.4.2
-
 # setup environment and copy current source version of mosquitto
 RUN set -x && \
     apk --no-cache add curl-dev inotify-tools && \
