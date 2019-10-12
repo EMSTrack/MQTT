@@ -52,12 +52,9 @@ RUN set -x && \
     apk del build-deps && \
     rm -rf /build
 
-# Create a group and user
-RUN addgroup -S worker && adduser -S worker -G worker -D -H -h /var/empty -s /sbin/nologin && \
-    chown worker:worker /mosquitto/data && \
-    chown worker:worker /mosquitto/config
-
 # Set up the entry point script and default command
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 EXPOSE 1883
+#ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
 ENTRYPOINT ["tini", "--"]
 CMD ["/usr/sbin/mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
