@@ -55,6 +55,5 @@ RUN set -x && \
 # Set up the entry point script and default command
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 EXPOSE 1883
-#ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
 ENTRYPOINT ["tini", "--"]
 CMD ["/usr/sbin/mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
