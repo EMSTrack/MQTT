@@ -1,4 +1,4 @@
-FROM eclipse-mosquitto:1.6.7
+FROM eclipse-mosquitto:1.6.15
 
 # setup environment and copy current source version of mosquitto
 RUN set -x && \
