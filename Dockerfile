@@ -52,7 +52,7 @@ RUN set -x && \
     make; cp auth-plug.so /usr/lib
 
 RUN set -x && \
-    wget https://github.com/iegomez/mosquitto-go-auth/master.tar.gz -O /tmp/gomap.tar.gz && \
+    wget https://github.com/iegomez/mosquitto-go-auth/archive/master.tar.gz -O /tmp/gomap.tar.gz && \
     mkdir -p /build/gomap && \
     tar --strip=1 -xf /tmp/gomap.tar.gz -C /build/gomap && \
     rm /tmp/gomap.tar.gz && \
