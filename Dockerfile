@@ -35,8 +35,7 @@ RUN set -x && \
     tar --strip=1 -xf /tmp/mosq.tar.gz -C /build/mosq && \
     rm /tmp/mosq.tar.gz && \
     mkdir -p /usr/local/include && \
-    ls /build/mosq/src && \
-    cp -R /build/mosq/src/include/*.h /usr/local/include/.
+    cp /build/mosq/src/include/*.h /usr/local/include/.
 
 RUN set -x && \
     cp /usr/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so && \
