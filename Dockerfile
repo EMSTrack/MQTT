@@ -33,7 +33,9 @@ RUN set -x && \
     rm -rf "$GNUPGHOME" /tmp/mosq.tar.gz.asc && \
     mkdir -p /build/mosq && \
     tar --strip=1 -xf /tmp/mosq.tar.gz -C /build/mosq && \
-    rm /tmp/mosq.tar.gz
+    rm /tmp/mosq.tar.gz && \
+    mkdir -p /usr/local/include && \
+    cp -R /build/mosq/include/* /usr/local/include/.
 
 RUN set -x && \
     cp /usr/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so && \
