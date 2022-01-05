@@ -11,6 +11,7 @@ RUN set -x && \
         util-linux-dev \
         make \
         gcc \
+        go \
         libc-dev && \
     wget https://mosquitto.org/files/source/mosquitto-${VERSION}.tar.gz -O /tmp/mosq.tar.gz && \
     echo "$DOWNLOAD_SHA256  /tmp/mosq.tar.gz" | sha256sum -c - && \
@@ -48,9 +49,19 @@ RUN set -x && \
         -e 's,MOSQUITTO_SRC =,MOSQUITTO_SRC =/build/mosq,' \
         -e 's,OPENSSLDIR = /usr,OPENSSLDIR = /usr/bin,' \
         config.mk.in > config.mk && \
-    make; cp auth-plug.so /usr/lib && \
-    apk del build-deps && \
-    rm -rf /build
+    make; cp auth-plug.so /usr/lib
+
+RUN set -x && \
+    wget https://github.com/iegomez/mosquitto-go-auth/master.tar.gz -O /tmp/gomap.tar.gz && \
+    mkdir -p /build/gomap && \
+    tar --strip=1 -xf /tmp/gomap.tar.gz -C /build/gomap && \
+    rm /tmp/gomap.tar.gz && \
+    cd /build/gomap && \
+    make
+
+RUN set -x && \
+    rm -rf /build && \
+    apk del build-deps
 
 # Set up the entry point script and default command
 COPY docker-entrypoint.sh /docker-entrypoint.sh
