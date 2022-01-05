@@ -35,6 +35,7 @@ RUN set -x && \
     tar --strip=1 -xf /tmp/mosq.tar.gz -C /build/mosq && \
     rm /tmp/mosq.tar.gz && \
     mkdir -p /usr/local/include && \
+    ls /build/mosq && \
     cp -R /build/mosq/include/* /usr/local/include/.
 
 RUN set -x && \
