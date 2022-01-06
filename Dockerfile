@@ -61,7 +61,7 @@ RUN set -x && \
     tar --strip=1 -xf /tmp/gomap.tar.gz -C /build/gomap && \
     rm /tmp/gomap.tar.gz && \
     cd /build/gomap && \
-    make
+    make; cp go-auth.so /usr/lib
 
 RUN set -x && \
     rm -rf /build && \
