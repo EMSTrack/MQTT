@@ -19,8 +19,8 @@ RUN set -x && \
     found=''; \
     for server in \
         ha.pool.sks-keyservers.net \
-        hkp://keyserver.ubuntu.com:80 \
-        hkp://p80.pool.sks-keyservers.net:80 \
+        hkp://keyserver.ubuntu.com \
+        hkp://p80.pool.sks-keyservers.net \
         pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $GPG_KEYS from $server"; \
